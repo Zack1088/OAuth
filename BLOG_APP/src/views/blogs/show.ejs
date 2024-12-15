@@ -1,0 +1,122 @@
+<article class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+    <!-- Image principale avec overlay -->
+    <% if (blog.images && blog.images.length > 0) { %>
+        <div class="relative h-[500px] group">
+            <img src="<%= blog.images[0] %>"
+                 alt="Image principale de <%= blog.title %>"
+                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <h1 class="absolute bottom-4 left-4 text-white text-4xl font-bold">
+                <%= blog.title %>
+            </h1>
+        </div>
+    <% } else { %>
+        <div class="relative h-[300px] bg-gray-200 flex items-center justify-center">
+            <p class="text-gray-500 text-xl">Aucune image disponible</p>
+        </div>
+    <% } %>
+
+    <div class="p-8 lg:p-12">
+        <!-- Informations de l'article -->
+        <div class="max-w-3xl mx-auto">
+            <!-- Titre -->
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 leading-tight"><%= blog.title %></h1>
+
+            <!-- Informations sur l'auteur -->
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="font-medium"><%= blog.author.email %></span>
+                </div>
+                <span class="text-gray-300">•</span>
+                <div class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <time datetime="<%= blog.createdAt.toISOString() %>">
+                        <%= new Date(blog.createdAt).toLocaleDateString('fr-FR', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        }) %>
+                    </time>
+                </div>
+            </div>
+
+            <!-- Contenu -->
+            <div class="prose max-w-none text-gray-700 leading-relaxed mb-12">
+                <%= blog.content %>
+            </div>
+
+            <!-- Galerie d'images -->
+            <% if (blog.images && blog.images.length > 1) { %>
+                <div class="mt-12">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Galerie d'images</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <% blog.images.slice(1).forEach(image => { %>
+                            <div class="relative group overflow-hidden rounded-lg">
+                                <img src="<%= image %>"
+                                     alt="Image supplémentaire de <%= blog.title %>"
+                                     class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Actions de l'auteur -->
+            <% if (locals.user && blog.author._id.toString() === user.id) { %>
+                <div class="mt-12 flex space-x-4 border-t pt-8">
+                    <a href="/blogs/edit/<%= blog._id %>"
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Modifier
+                    </a>
+                    <button data-action="delete"
+                            data-blog-id="<%= blog._id %>"
+                            class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Supprimer
+                    </button>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</article>
+
+<!-- Modal de confirmation -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-8 max-w-md mx-4 transform transition-all duration-300 scale-95">
+        <div class="text-center">
+            <svg class="mx-auto h-12 w-12 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer la suppression</h3>
+            <p class="text-gray-600 mb-6">Cette action est irréversible. Êtes-vous sûr de vouloir supprimer ce post ?</p>
+        </div>
+        <div class="flex justify-end space-x-4">
+            <button id="cancelDelete" 
+                    class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                Annuler
+            </button>
+            <button id="confirmDelete" 
+                    class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/showPost.js"></script>

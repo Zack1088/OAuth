@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion 2FA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-12">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="px-6 py-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    Authentification à deux facteurs
+                </h2>
+
+                <!-- Messages -->
+                <% if (messages.success) { %>
+                    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                        <%= messages.success %>
+                    </div>
+                <% } %>
+                <% if (messages.error) { %>
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        <%= messages.error %>
+                    </div>
+                <% } %>
+
+                <!-- Statut actuel -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-2">Statut</h3>
+                    <% if (user.mfaEnabled) { %>
+                        <div class="flex items-center text-green-600">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Activé
+                        </div>
+                        <form action="/auth/2fa/disable" method="POST" class="mt-4">
+                            <button type="submit"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir désactiver la 2FA ?')"
+                                    class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
+                                Désactiver la 2FA
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <div class="flex items-center text-red-600 mb-4">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            Désactivé
+                        </div>
+                        <a href="/auth/2fa/setup"
+                           class="inline-block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+                            Activer la 2FA
+                        </a>
+                    <% } %>
+                </div>
+
+                <!-- Instructions -->
+                <div class="mt-6 text-sm text-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">À propos de la 2FA</h3>
+                    <p class="mb-2">
+                        L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte.
+                        Une fois activée, vous devrez entrer un code généré par votre application d'authentification
+                        en plus de votre mot de passe lors de la connexion.
+                    </p>
+                </div>
+
+                <!-- Lien retour -->
+                <div class="mt-8">
+                    <a href="/blogs/my" class="text-blue-500 hover:text-blue-700">
+                        ← Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

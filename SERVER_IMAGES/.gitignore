@@ -1,0 +1,5 @@
+# image-server/.gitignore
+/logs
+/uploads
+.env
+node_modules

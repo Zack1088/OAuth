@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration MFA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-6">Configuration MFA</h2>
+
+            <p class="mb-4">1. Scannez ce QR code avec votre application d'authentification :</p>
+            
+            <!-- QR Code -->
+            <div class="flex justify-center mb-6">
+                <img src="<%= qrCodeUrl %>" alt="QR Code" class="border p-2">
+            </div>
+
+            <p class="mb-4">2. Ou entrez manuellement ce code secret :</p>
+            <div class="bg-gray-100 p-2 mb-6 font-mono text-center">
+                <%= secret %>
+            </div>
+
+            <!-- Formulaire de validation -->
+            <form action="/auth/2fa/setup" method="POST">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="token">
+                        Code de vérification
+                    </label>
+                    <input 
+                        type="text" 
+                        id="token" 
+                        name="token" 
+                        required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Entrez le code à 6 chiffres"
+                    >
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <button 
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Valider
+                    </button>
+                    <a 
+                        href="/blogs/my"
+                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                    >
+                        Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

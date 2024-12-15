@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation 2FA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-6">Vérification en deux étapes</h2>
+            
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 hidden" id="successMessage">
+                <% if (messages.success) { %>
+                    <%= messages.success %>
+                <% } %>
+            </div>
+            
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 hidden" id="errorMessage">
+                <% if (messages.error) { %>
+                    <%= messages.error %>
+                <% } %>
+            </div>
+
+            <form action="/auth/2fa/verify" method="POST">
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="token">
+                        Code d'authentification
+                    </label>
+                    <input
+                        type="text"
+                        id="token"
+                        name="token"
+                        required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Entrez le code à 6 chiffres"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Vérifier
+                    </button>
+                    <a
+                        href="/auth/login"
+                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                    >
+                        Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Afficher les messages s'ils existent
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('successMessage').textContent.trim()) {
+                document.getElementById('successMessage').classList.remove('hidden');
+            }
+            if (document.getElementById('errorMessage').textContent.trim()) {
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        });
+
+        // Empêcher la navigation vers d'autres pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const nonAuthLinks = document.querySelectorAll('a:not([href^="/auth"])');
+            nonAuthLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Veuillez compléter la validation en deux étapes avant d\'accéder à cette page.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

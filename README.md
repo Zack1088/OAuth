@@ -69,10 +69,10 @@ Pour exécuter ce projet, assurez-vous d'avoir les éléments suivants installé
 
 ### 1. Cloner le Dépôt
 ```bash
-git clone <URL-du-dépôt>
+git clone <https://github.com/Zack1088/OAuth.git>
 cd <BLOG_APP>
-cd<SERVER_IMAGES>
-
+cd <SERVER_IMAGES>
+```
 
 2. **Installer les dépendances dans les deux projet BLOG_APP et SERVER_IMAGE**
    ```bash
